@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML <object> Element Demonstration</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+    section { margin-bottom: 2rem; padding: 1.25rem; border: 1px solid #e2e8f0; border-radius: 8px; }
+    object { border: 1px dashed #cbd5e1; border-radius: 4px; }
+    .fallback { padding: 0.75rem; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; border-radius: 4px; }
+  </style>
+</head>
+<body>
 
+  <h1>HTML &lt;object&gt; Tag Capabilities</h1>
+
+  <!-- 1. SVG / Image Embedding -->
+  <section>
+    <h2>1. SVG Vector Image</h2>
+    <object 
+      data="circle.svg" 
+      type="image/svg+xml" 
+      width="150" 
+      height="150" 
+      aria-label="Interactive SVG Graphic">
+      <!-- Fallback image if SVG is blocked or fails -->
+      <img src="fallback.png" alt="Fallback static image">
+    </object>
+  </section>
+
+  <!-- 2. PDF Document View -->
+  <section>
+    <h2>2. Inline PDF Viewing</h2>
+    <object 
+      data="sample.pdf" 
+      type="application/pdf" 
+      width="100%" 
+      height="300">
+      <!-- Fallback link for mobile/browsers without built-in PDF reader -->
+      <p class="fallback">
+        PDF preview is unavailable on your device. 
+        <a href="sample.pdf" download>Download the PDF file</a> instead.
+      </p>
+    </object>
+  </section>
+
+  <!-- 3. Embedded Browsing Context (HTML page inside HTML) -->
+  <section>
+    <h2>3. Embedded HTML Page (Alternative to &lt;iframe&gt;)</h2>
+    <object 
+      data="embed-content.html" 
+      type="text/html" 
+      width="100%" 
+      height="150" 
+      name="embedded-frame">
+      <p class="fallback">Unable to load nested HTML content.</p>
+    </object>
+  </section>
+
+  <!-- 4. Form Association & Image Map -->
+  <section>
+    <h2>4. Advanced Attributes (Form & Map)</h2>
+    <form id="user-form" action="/submit" method="POST"></form>
+
+    <object 
+      data="interactive-map.png" 
+      type="image/png" 
+      width="300" 
+      height="150"
+      form="user-form"
+      usemap="#image-map">
+      <p class="fallback">Interactive map resource missing.</p>
+    </object>
+
+    <map name="image-map">
+      <area shape="rect" coords="0,0,150,150" href="#region1" alt="Region 1">
+    </map>
+  </section>
+
+  <!-- 5. Fallback Behavior Test -->
+  <section>
+    <h2>5. Triggering Fallback Content</h2>
+    <object data="non-existent-media.mp4" type="video/mp4" width="100%" height="100">
+      <!-- Renders ONLY when data resource fails or MIME type isn't supported -->
+      <div class="fallback">
+        ⚠️ <strong>Resource Failed:</strong> The file could not be loaded. This text is displayed natively by the browser as fallback UI.
+      </div>
+    </object>
+  </section>
+
+</body>
+</html>
