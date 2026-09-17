@@ -3,91 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTML <object> Element Demonstration</title>
+  <title>Website Building Blocks</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
-    section { margin-bottom: 2rem; padding: 1.25rem; border: 1px solid #e2e8f0; border-radius: 8px; }
-    object { border: 1px dashed #cbd5e1; border-radius: 4px; }
-    .fallback { padding: 0.75rem; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; border-radius: 4px; }
+    body { font-family: sans-serif; margin: 0; background: #f8fafc; color: #0f172a; }
+
+    /* 1. LAYOUT CONTAINER OBJECTS */
+    header { background: #1e293b; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; display: grid; gap: 2rem; }
+
+    /* 2. SHAPE OBJECTS (Card, Circle, Badge) */
+    .card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    .circle-avatar { width: 50px; height: 50px; background: #3b82f6; border-radius: 50%; display: inline-block; }
+    .status-badge { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+
+    /* 3. INTERACTIVE CONTROL OBJECTS */
+    .btn { background: #2563eb; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .btn:hover { background: #1d4ed8; }
+    .text-input { padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 6px; width: 200px; }
   </style>
 </head>
 <body>
 
-  <h1>HTML &lt;object&gt; Tag Capabilities</h1>
+  <!-- OBJECT TYPE: Header Container -->
+  <header>
+    <h2>SiteLogo</h2>
+    <!-- OBJECT TYPE: Navigation Links -->
+    <nav>
+      <a href="#" style="color:white; margin-left: 1rem;">Home</a>
+      <a href="#" style="color:white; margin-left: 1rem;">About</a>
+    </nav>
+  </header>
 
-  <!-- 1. SVG / Image Embedding -->
-  <section>
-    <h2>1. SVG Vector Image</h2>
-    <object 
-      data="circle.svg" 
-      type="image/svg+xml" 
-      width="150" 
-      height="150" 
-      aria-label="Interactive SVG Graphic">
-      <!-- Fallback image if SVG is blocked or fails -->
-      <img src="fallback.png" alt="Fallback static image">
-    </object>
-  </section>
+  <main>
 
-  <!-- 2. PDF Document View -->
-  <section>
-    <h2>2. Inline PDF Viewing</h2>
-    <object 
-      data="sample.pdf" 
-      type="application/pdf" 
-      width="100%" 
-      height="300">
-      <!-- Fallback link for mobile/browsers without built-in PDF reader -->
-      <p class="fallback">
-        PDF preview is unavailable on your device. 
-        <a href="sample.pdf" download>Download the PDF file</a> instead.
-      </p>
-    </object>
-  </section>
+    <!-- SECTION 1: SHAPES & VECTOR GRAPHICS -->
+    <section class="card">
+      <h3>1. Shape & Vector Objects</h3>
+      <p>Shapes are created with CSS or native vector code (SVG):</p>
+      
+      <!-- CSS Circle Shape -->
+      <div class="circle-avatar" title="CSS Circle Object"></div>
+      
+      <!-- CSS Pill/Badge Shape -->
+      <span class="status-badge">Active Badge</span>
 
-  <!-- 3. Embedded Browsing Context (HTML page inside HTML) -->
-  <section>
-    <h2>3. Embedded HTML Page (Alternative to &lt;iframe&gt;)</h2>
-    <object 
-      data="embed-content.html" 
-      type="text/html" 
-      width="100%" 
-      height="150" 
-      name="embedded-frame">
-      <p class="fallback">Unable to load nested HTML content.</p>
-    </object>
-  </section>
+      <!-- SVG Vector Star Object -->
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="#f59e0b" style="vertical-align: middle; margin-left: 1rem;">
+        <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
+      </svg>
+    </section>
 
-  <!-- 4. Form Association & Image Map -->
-  <section>
-    <h2>4. Advanced Attributes (Form & Map)</h2>
-    <form id="user-form" action="/submit" method="POST"></form>
+    <!-- SECTION 2: INTERACTIVE UI OBJECTS -->
+    <section class="card">
+      <h3>2. Interactive UI Objects</h3>
+      <p>Inputs and triggers that users interact with:</p>
+      
+      <form onsubmit="return false;" style="display: flex; gap: 10px;">
+        <input type="text" class="text-input" placeholder="Type here...">
+        <button class="btn">Click Button</button>
+      </form>
+    </section>
 
-    <object 
-      data="interactive-map.png" 
-      type="image/png" 
-      width="300" 
-      height="150"
-      form="user-form"
-      usemap="#image-map">
-      <p class="fallback">Interactive map resource missing.</p>
-    </object>
-
-    <map name="image-map">
-      <area shape="rect" coords="0,0,150,150" href="#region1" alt="Region 1">
-    </map>
-  </section>
-
-  <!-- 5. Fallback Behavior Test -->
-  <section>
-    <h2>5. Triggering Fallback Content</h2>
-    <object data="non-existent-media.mp4" type="video/mp4" width="100%" height="100">
-      <!-- Renders ONLY when data resource fails or MIME type isn't supported -->
-      <div class="fallback">
-        ⚠️ <strong>Resource Failed:</strong> The file could not be loaded. This text is displayed natively by the browser as fallback UI.
+    <!-- SECTION 3: COMPOSITE CARD OBJECT -->
+    <section class="card">
+      <h3>3. Media & Content Composite</h3>
+      <p>Combining images, headers, and buttons into a reusable UI "Card":</p>
+      
+      <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; max-width: 300px;">
+        <!-- Image Object -->
+        <img src="https://picsum.photos/300/150" alt="Sample picture" style="width: 100%; display: block;">
+        <div style="padding: 1rem;">
+          <h4 style="margin: 0 0 0.5rem 0;">Product Card Object</h4>
+          <p style="font-size: 0.9rem; color: #64748b; margin: 0 0 1rem 0;">A self-contained UI module.</p>
+          <button class="btn" style="width: 100%;">Buy Now</button>
+        </div>
       </div>
-    </object>
-  </section>
+    </section>
+
+  </main>
 
 </body>
 </html>
