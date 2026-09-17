@@ -2,85 +2,216 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Website Building Blocks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Interactive Mobile UI</title>
   <style>
-    body { font-family: sans-serif; margin: 0; background: #f8fafc; color: #0f172a; }
+    /* RESET & MOBILE LAYOUT */
+    * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-    /* 1. LAYOUT CONTAINER OBJECTS */
-    header { background: #1e293b; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; display: grid; gap: 2rem; }
+    /* 1. TOP-LEFT CIRCLE BUTTON */
+    .circle-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: #3b82f6;
+      border: 3px solid #60a5fa;
+      color: white;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      user-select: none;
+      transition: transform 0.1s ease;
+    }
+    .circle-btn:active { transform: scale(0.92); }
 
-    /* 2. SHAPE OBJECTS (Card, Circle, Badge) */
-    .card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-    .circle-avatar { width: 50px; height: 50px; background: #3b82f6; border-radius: 50%; display: inline-block; }
-    .status-badge { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+    /* 2. SLIDE-OUT PANELS */
+    .panel {
+      position: fixed;
+      background: #1e293b;
+      border: 1px solid #334155;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 90;
+      padding: 2rem;
+    }
 
-    /* 3. INTERACTIVE CONTROL OBJECTS */
-    .btn { background: #2563eb; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    .btn:hover { background: #1d4ed8; }
-    .text-input { padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 6px; width: 200px; }
+    /* Left Panel (Triggered on Click) */
+    .left-panel {
+      top: 0;
+      left: 0;
+      width: 75vw;
+      max-width: 300px;
+      height: 100vh;
+      transform: translateX(-100%);
+    }
+    .left-panel.open { transform: translateX(0); }
+
+    /* Top Panel (Triggered on Hold) */
+    .top-panel {
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 40vh;
+      transform: translateY(-100%);
+      background: #0f2942;
+    }
+    .top-panel.open { transform: translateY(0); }
+
+    /* 3. BALLOON BLOATING SLIDER (LEFT SIDE) */
+    .balloon-wrapper {
+      position: fixed;
+      left: 15px;
+      top: 55%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 80;
+      /* Smooth elastic transition for the balloon effect */
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.4), 
+                  border-radius 0.4s ease, 
+                  background 0.3s ease,
+                  box-shadow 0.3s ease;
+    }
+
+    /* Vertical Range Input Styling */
+    .balloon-slider {
+      appearance: none;
+      writing-mode: vertical-lr; /* Makes range vertical */
+      direction: rtl;
+      width: 12px;
+      height: 200px;
+      background: #334155;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .balloon-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #ec4899;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(236, 72, 153, 0.8);
+    }
+
+    /* "BLOATING" CLASS applied via JavaScript on drag */
+    .balloon-wrapper.bloating {
+      transform: translateY(-50%) scale(1.4, 1.25); /* Inflates outward */
+      border-radius: 60px;
+      background: rgba(236, 72, 153, 0.25);
+      box-shadow: 0 0 35px rgba(236, 72, 153, 0.5);
+    }
+
+    /* INSTRUCTION CONTENT */
+    .app-content { text-align: center; padding: 2rem; color: #94a3b8; }
   </style>
 </head>
 <body>
 
-  <!-- OBJECT TYPE: Header Container -->
-  <header>
-    <h2>SiteLogo</h2>
-    <!-- OBJECT TYPE: Navigation Links -->
-    <nav>
-      <a href="#" style="color:white; margin-left: 1rem;">Home</a>
-      <a href="#" style="color:white; margin-left: 1rem;">About</a>
-    </nav>
-  </header>
+  <!-- Top-Left Circle Button -->
+  <div class="circle-btn" id="circleBtn">⚙️</div>
 
-  <main>
+  <!-- Panels -->
+  <div class="panel left-panel" id="leftPanel">
+    <h2>Left Panel</h2>
+    <p style="margin-top:10px;">Opened via short tap / click.</p>
+  </div>
 
-    <!-- SECTION 1: SHAPES & VECTOR GRAPHICS -->
-    <section class="card">
-      <h3>1. Shape & Vector Objects</h3>
-      <p>Shapes are created with CSS or native vector code (SVG):</p>
-      
-      <!-- CSS Circle Shape -->
-      <div class="circle-avatar" title="CSS Circle Object"></div>
-      
-      <!-- CSS Pill/Badge Shape -->
-      <span class="status-badge">Active Badge</span>
+  <div class="panel top-panel" id="topPanel">
+    <h2>Top Panel</h2>
+    <p style="margin-top:10px;">Opened via hold / long-press.</p>
+  </div>
 
-      <!-- SVG Vector Star Object -->
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="#f59e0b" style="vertical-align: middle; margin-left: 1rem;">
-        <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
-      </svg>
-    </section>
+  <!-- Left Balloon Slider -->
+  <div class="balloon-wrapper" id="balloonWrapper">
+    <input type="range" min="0" max="100" value="50" class="balloon-slider" id="balloonSlider">
+  </div>
 
-    <!-- SECTION 2: INTERACTIVE UI OBJECTS -->
-    <section class="card">
-      <h3>2. Interactive UI Objects</h3>
-      <p>Inputs and triggers that users interact with:</p>
-      
-      <form onsubmit="return false;" style="display: flex; gap: 10px;">
-        <input type="text" class="text-input" placeholder="Type here...">
-        <button class="btn">Click Button</button>
-      </form>
-    </section>
+  <!-- Canvas/Main Display Area -->
+  <div class="app-content">
+    <h2>Mobile Web App</h2>
+    <p style="margin-top:0.5rem;">• <strong>Tap Circle:</strong> Toggle Left Panel</p>
+    <p>• <strong>Hold Circle:</strong> Toggle Top Panel</p>
+    <p>• <strong>Drag Slider:</strong> Bloat Balloon</p>
+  </div>
 
-    <!-- SECTION 3: COMPOSITE CARD OBJECT -->
-    <section class="card">
-      <h3>3. Media & Content Composite</h3>
-      <p>Combining images, headers, and buttons into a reusable UI "Card":</p>
-      
-      <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; max-width: 300px;">
-        <!-- Image Object -->
-        <img src="https://picsum.photos/300/150" alt="Sample picture" style="width: 100%; display: block;">
-        <div style="padding: 1rem;">
-          <h4 style="margin: 0 0 0.5rem 0;">Product Card Object</h4>
-          <p style="font-size: 0.9rem; color: #64748b; margin: 0 0 1rem 0;">A self-contained UI module.</p>
-          <button class="btn" style="width: 100%;">Buy Now</button>
-        </div>
-      </div>
-    </section>
+  <script>
+    // --- 1. CLICK VS HOLD LOGIC FOR CIRCLE BUTTON ---
+    const circleBtn = document.getElementById('circleBtn');
+    const leftPanel = document.getElementById('leftPanel');
+    const topPanel = document.getElementById('topPanel');
 
-  </main>
+    let pressTimer = null;
+    let isHold = false;
+    const HOLD_DURATION = 500; // time in ms to consider it a "Hold"
+
+    function startPress() {
+      isHold = false;
+      pressTimer = setTimeout(() => {
+        isHold = true;
+        // Trigger Hold Action
+        topPanel.classList.toggle('open');
+      }, HOLD_DURATION);
+    }
+
+    function endPress() {
+      clearTimeout(pressTimer);
+      if (!isHold) {
+        // Trigger Click Action
+        leftPanel.classList.toggle('open');
+      }
+    }
+
+    function cancelPress() {
+      clearTimeout(pressTimer);
+    }
+
+    // Event listeners supporting both touch (mobile) and mouse (desktop)
+    circleBtn.addEventListener('pointerdown', startPress);
+    circleBtn.addEventListener('pointerup', endPress);
+    circleBtn.addEventListener('pointerleave', cancelPress);
+
+
+    // --- 2. BALLOON BLOATING SLIDER LOGIC ---
+    const balloonWrapper = document.getElementById('balloonWrapper');
+    const balloonSlider = document.getElementById('balloonSlider');
+
+    // Inflate balloon on press / drag start
+    balloonSlider.addEventListener('pointerdown', () => {
+      balloonWrapper.classList.add('bloating');
+    });
+
+    // Deflate balloon when released or pointer leaves
+    balloonSlider.addEventListener('pointerup', () => {
+      balloonWrapper.classList.remove('bloating');
+    });
+    
+    balloonSlider.addEventListener('pointercancel', () => {
+      balloonWrapper.classList.remove('bloating');
+    });
+  </script>
 
 </body>
 </html>
